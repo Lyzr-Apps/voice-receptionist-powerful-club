@@ -1,0 +1,47 @@
+{
+  "agent_name": "Voice Receptionist Agent",
+  "agent_id": "698bdc2ef0601df65d51cb3b",
+  "agent_purpose": "voice_interaction",
+  "description": "Voice receptionist agent that handles incoming calls through audio streaming. Response is delivered via voice, not structured JSON.",
+  "response_schema": {
+    "status": "string (success|error)",
+    "result": {
+      "response": "string",
+      "action_taken": "string (optional)",
+      "data": "object (optional, any structured data)",
+      "suggestions": [
+        "string (optional)"
+      ]
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string (ISO)"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "response": "I've completed the task you requested",
+      "action_taken": "Processed the input and generated output",
+      "data": {
+        "key": "value"
+      },
+      "suggestions": [
+        "You might also want to try X"
+      ]
+    },
+    "metadata": {
+      "agent_name": "Voice Receptionist Agent",
+      "timestamp": "2025-01-15T10:30:00Z"
+    }
+  },
+  "is_actual_tested": false,
+  "test_timestamp": "2026-02-11T01:33:28.759972",
+  "test_message_used": "Hello, provide a sample response",
+  "raw_test_response": "Absolutely! Here\u2019s a sample response I would use as a professional voice receptionist when answering an incoming call:\n\n\u201cGood morning, thank you for calling! This is [Your Business Name], how may I assist you today?\u201d\n\nIf the caller asks for business hours, for example:\n\n\u201cOur business hours are Monday through Friday from 9 AM to 6 PM, and Saturday from 10 AM to 4 PM. Is there something specific I can help you with or would you like to schedule an appointment?\u201d\n\nLet me know if you\u2019d like a sample response for a different scenario!",
+  "test_error": "Response not valid JSON: Expecting value: line 1 column 1 (char 0)",
+  "actual_test_response": {
+    "raw_text": "Thank you for reaching out. Could you please clarify what you would like to verify today? Are you inquiring about an upcoming appointment or something else?"
+  },
+  "test_passed": false
+}

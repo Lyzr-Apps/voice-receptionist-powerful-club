@@ -1,0 +1,37 @@
+{
+  "agents": [
+    {
+      "agent_id": "698bdc2ef0601df65d51cb3b",
+      "name": "Voice Receptionist Agent",
+      "type": "voice",
+      "has_knowledge_base": true,
+      "rag_id": "698bdc1367a82d6d27bdde8c",
+      "rag_name": "receptionistbusinesskbnp80",
+      "voice_enabled": true,
+      "voice_config": {
+        "initiator": "human",
+        "message": "Thank you for calling! How can I help you today?",
+        "language": "English",
+        "voice": "sage"
+      },
+      "integrations": [
+        {
+          "tool_name": "googlecalendar",
+          "tool_source": "composio",
+          "actions": ["GOOGLECALENDAR_FIND_FREE_SLOTS", "GOOGLECALENDAR_CREATE_EVENT", "GOOGLECALENDAR_LIST_EVENTS"]
+        }
+      ]
+    }
+  ],
+  "knowledge_bases": [
+    {
+      "rag_id": "698bdc1367a82d6d27bdde8c",
+      "rag_name": "receptionistbusinesskbnp80",
+      "name": "receptionist_business_kb",
+      "description": "Knowledge base containing business hours, services, pricing, FAQs, and general business information",
+      "used_by_agents": ["698bdc2ef0601df65d51cb3b"]
+    }
+  ],
+  "workflow_type": "single_agent",
+  "created_at": "2026-02-11"
+}

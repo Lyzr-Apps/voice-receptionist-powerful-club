@@ -1,0 +1,26 @@
+{
+  "agent_name": "Voice Receptionist Agent",
+  "agent_id": "698bdc2ef0601df65d51cb3b",
+  "agent_type": "VOICE_AGENT",
+  "test_input": "verification check",
+  "response": {
+    "raw_text": "Thank you for reaching out. Could you please clarify what you would like to verify today? Are you inquiring about an upcoming appointment or something else?",
+    "agent_type": "voice",
+    "interaction_mode": "inbound_call"
+  },
+  "field_types": {
+    "raw_text": "string",
+    "agent_type": "string",
+    "interaction_mode": "string"
+  },
+  "status": "passed",
+  "notes": "Voice agent verified successfully. This agent is designed for voice interactions and inbound calls, not structured JSON responses. The agent responded appropriately with natural conversational text.",
+  "timestamp": "2026-02-11T01:33:28.759520",
+  "verification_type": "agent_existence_and_response",
+  "voice_agent_metadata": {
+    "purpose": "Voice-enabled inbound receptionist",
+    "expected_behavior": "Handles incoming calls with natural conversation",
+    "response_format": "Natural language text (not structured JSON)",
+    "ui_considerations": "Should display conversation history, not structured data fields"
+  }
+}

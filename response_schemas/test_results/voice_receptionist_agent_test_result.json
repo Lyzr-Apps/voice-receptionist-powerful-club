@@ -1,0 +1,15 @@
+{
+  "agent_name": "Voice Receptionist Agent",
+  "agent_id": "698bdc2ef0601df65d51cb3b",
+  "test_message": "verification check",
+  "expected_purpose": "Voice-enabled inbound receptionist",
+  "timestamp": "2026-02-11T01:33:28.759520",
+  "is_valid_json": false,
+  "validation_errors": [
+    "Response is not valid JSON: Expecting value: line 1 column 1 (char 0)"
+  ],
+  "actual_response": {
+    "raw_text": "Thank you for reaching out. Could you please clarify what you would like to verify today? Are you inquiring about an upcoming appointment or something else?"
+  },
+  "raw_response": "Thank you for reaching out. Could you please clarify what you would like to verify today? Are you inquiring about an upcoming appointment or something else?"
+}
