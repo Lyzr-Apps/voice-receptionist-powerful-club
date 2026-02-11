@@ -321,6 +321,7 @@ export default function Home() {
 
     try {
       // Step 1: Start session via HTTP
+      console.log('Starting voice session for agent:', VOICE_AGENT_ID)
       const res = await fetch('https://voice-sip.studio.lyzr.ai/session/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -328,10 +329,13 @@ export default function Home() {
       })
 
       if (!res.ok) {
+        const errorText = await res.text()
+        console.error('Session start failed:', res.status, errorText)
         throw new Error(`Session start failed: ${res.status}`)
       }
 
       const sessionData: VoiceSession = await res.json()
+      console.log('Session started:', sessionData)
       setVoiceSession(sessionData)
 
       const sampleRate = sessionData?.audioConfig?.sampleRate ?? 24000
@@ -340,10 +344,12 @@ export default function Home() {
       audioContextRef.current = new AudioContext({ sampleRate })
 
       // Step 3: Connect WebSocket using wsUrl from session
+      console.log('Connecting to WebSocket:', sessionData.wsUrl)
       const ws = new WebSocket(sessionData.wsUrl)
       wsRef.current = ws
 
       ws.onopen = async () => {
+        console.log('WebSocket connected')
         setCallStatus('Microphone access...')
 
         // Step 4: Start microphone capture
@@ -357,6 +363,7 @@ export default function Home() {
             }
           })
           streamRef.current = stream
+          console.log('Microphone access granted')
 
           if (!audioContextRef.current) return
 
@@ -364,8 +371,15 @@ export default function Home() {
           const processor = audioContextRef.current.createScriptProcessor(4096, 1, 1)
           processorRef.current = processor
 
+          // Set active BEFORE connecting processor
+          setIsCallActive(true)
+          setIsConnecting(false)
+          setCallStatus('Call active')
+          setConversationHistory([])
+          setCurrentTranscript('')
+
           processor.onaudioprocess = (e) => {
-            if (!isCallActive || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return
+            if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return
 
             const inputData = e.inputBuffer.getChannelData(0)
             const base64Audio = base64EncodeAudio(inputData)
@@ -379,12 +393,6 @@ export default function Home() {
 
           source.connect(processor)
           processor.connect(audioContextRef.current.destination)
-
-          setIsCallActive(true)
-          setIsConnecting(false)
-          setCallStatus('Call active')
-          setConversationHistory([])
-          setCurrentTranscript('')
         } catch (micError) {
           throw new Error('Microphone access denied')
         }
@@ -393,6 +401,7 @@ export default function Home() {
       ws.onmessage = async (event) => {
         try {
           const msg = JSON.parse(event.data)
+          console.log('WebSocket message received:', msg.type)
 
           if (msg.type === 'audio' && msg.audio) {
             // Queue audio for playback
@@ -400,6 +409,7 @@ export default function Home() {
             audioQueueRef.current.push(pcm16)
             playNextAudio()
           } else if (msg.type === 'transcript') {
+            console.log('Transcript:', msg.role, msg.text)
             if (msg.role === 'user') {
               setConversationHistory(prev => [...prev, { speaker: 'You', text: msg.text ?? '' }])
             } else if (msg.role === 'assistant') {
@@ -411,19 +421,22 @@ export default function Home() {
           } else if (msg.type === 'clear') {
             setCurrentTranscript('')
           } else if (msg.type === 'error') {
+            console.error('Voice error:', msg.message)
             setCallStatus(`Error: ${msg.message ?? 'Unknown error'}`)
           }
         } catch (parseError) {
-          console.error('Message parse error:', parseError)
+          console.error('Message parse error:', parseError, event.data)
         }
       }
 
-      ws.onerror = () => {
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error)
         setCallStatus('Connection error')
         endVoiceCall()
       }
 
       ws.onclose = () => {
+        console.log('WebSocket closed')
         if (isCallActive) {
           setCallStatus('Call ended')
           endVoiceCall()
@@ -431,6 +444,7 @@ export default function Home() {
       }
 
     } catch (error) {
+      console.error('Voice call error:', error)
       setCallStatus(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       setIsConnecting(false)
       endVoiceCall()
